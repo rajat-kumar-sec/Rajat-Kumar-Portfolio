@@ -1418,8 +1418,13 @@ const ATKD = {
   const ATK_R = 1.705;            // dot radius just above the surface
   const ATK_ARC_H = 0.32;         // arc bulge height
   const ATK_COORDS = ATKD.coords;
-  const ATK_PULSES = ATKD.pulses;
-  const ATK_ARCS = ATKD.arcs;
+  let ATK_PULSES = ATKD.pulses;
+  let ATK_ARCS = ATKD.arcs;
+
+  // OPTIONAL: deploy radware-worker.js on Cloudflare Workers and put its URL here
+  // (e.g. 'https://<your-name>.<sub>.workers.dev'); leaves '' the map uses CORS
+  // proxies first and the baked snapshot above as a guaranteed fallback.
+  const ATK_LIVE_URL = '';
 
   const ATK_NAMES = {
     AE:'UAE', AL:'Albania', AR:'Argentina', AT:'Austria', AU:'Australia', AZ:'Azerbaijan',
@@ -1471,24 +1476,30 @@ const ATKD = {
   const dotMat = makeGlowMat(0xff5577, 1);      // attack origin pulses (red)
   const cometHeadMat = makeGlowMat(0x39ff9e, 1); // travelling attack head (green)
 
-  // ---- static attacker-origin pulses (webAttackers) ----
-  const maxPulse = Math.max.apply(null, Object.keys(ATK_PULSES).map(k => ATK_PULSES[k]));
-  const pulseSprites = [];
-  Object.keys(ATK_PULSES).forEach(code => {
-    const p = posOf(code, ATK_R);
-    if(!p) return;
-    const s = new THREE.Sprite(dotMat);
-    const scale = 0.09 + 0.5 * (ATK_PULSES[code] / maxPulse);
-    s.scale.set(scale, scale, 1);
-    s.position.copy(p);
-    earthGroup.add(s);
-    pulseSprites.push({sprite: s, base: scale, phase: Math.random() * Math.PI * 2});
-  });
+  // ---- live attacker-origin pulses (webAttackers), rebuilt on data refresh ----
+  let pulseSprites = [];
+  function buildPulses(){
+    pulseSprites.forEach(o => earthGroup.remove(o.sprite));
+    pulseSprites = [];
+    const sorted = Object.keys(ATK_PULSES).map(k => ATK_PULSES[k]);
+    const maxPulse = sorted.length ? Math.max.apply(null, sorted) : 1;
+    Object.keys(ATK_PULSES).forEach(code => {
+      const p = posOf(code, ATK_R);
+      if(!p) return;
+      const s = new THREE.Sprite(dotMat);
+      const scale = 0.09 + 0.5 * (ATK_PULSES[code] / maxPulse);
+      s.scale.set(scale, scale, 1);
+      s.position.copy(p);
+      earthGroup.add(s);
+      pulseSprites.push({sprite: s, base: scale, phase: Math.random() * Math.PI * 2});
+    });
+  }
+  buildPulses();
 
   // ---- travelling attack arcs (scanners), pool of reusable comets ----
   const COMETS = 26;
   const cometPool = [];
-  const cometWeight = ATK_ARCS.reduce((s,a)=>s+a[2], 0);
+  let cometWeight = ATK_ARCS.reduce((s,a)=>s+a[2], 0) || 1;
   function pickArc(){
     let r = Math.random() * cometWeight;
     for(const a of ATK_ARCS){
@@ -1755,6 +1766,88 @@ const ATKD = {
   if(latEl) latEl.textContent = '12ms';
   if(threatEl) threatEl.textContent = String(ATK_ARCS.reduce((s,a)=>s+a[2],0)).padStart(3,'0');
   if(countryEl) countryEl.textContent = String(Object.keys(ATK_COORDS).length).padStart(2,'0');
+
+  /* ---------------- live data refresh ----------------
+     Tries, in order:
+       1. a Cloudflare Worker (set ATK_LIVE_URL at the top of this block),
+       2. free CORS proxies in front of the Radware public API,
+       3. the baked RKTD/ATKD snapshot above as a guaranteed fallback.
+     With a Worker deployed the map is TRULY live (fresh Radware records
+     every ~45s); with only the proxies it is best-effort live, and if every
+     attempt fails the baked snapshot keeps the globe running offline.       */
+  function radwareRecords(data){
+    const recs = [];
+    const walk = o => {
+      if(Array.isArray(o)){ for(const x of o) walk(x); return; }
+      if(o && typeof o === 'object'){
+        if(o.value && Array.isArray(o.value)){ for(const v of o.value) walk(v); }
+        else if(o.sourceCountry) recs.push(o);
+        else { for(const k in o) walk(o[k]); }
+      }
+    };
+    walk(data);
+    return recs;
+  }
+  // aggregate raw Radware records into the same {pulses, arcs} shape used above
+  function aggregateRecords(recs){
+    const pulses = {}, pairs = {};
+    recs.forEach(r => {
+      const src = r.sourceCountry, dst = r.destinationCountry;
+      if(!src || !ATK_COORDS[src]) return;
+      if(r.type === 'webAttackers' || !dst){ pulses[src] = (pulses[src]||0)+1; }
+      else if(dst && ATK_COORDS[dst]){
+        const key = src+'|'+dst;
+        pairs[key] = (pairs[key]||0)+1;
+      }
+    });
+    const arcs = Object.keys(pairs).map(k => {
+      const p = k.split('|');
+      return [p[0], p[1], pairs[k]];
+    });
+    arcs.sort((a,b)=>b[2]-a[2]);
+    return {pulses, arcs: arcs.slice(0, 120)};
+  }
+  function applyLive(pulses, arcs){
+    ATK_PULSES = pulses;
+    ATK_ARCS = arcs;
+    cometWeight = arcs.reduce((s,a)=>s+a[2],0) || 1;
+    buildPulses();
+    feedState.clear();
+    if(pktEl) pktEl.textContent = String(arcs.length).padStart(3,'0');
+    if(threatEl) threatEl.textContent = String(cometWeight).padStart(3,'0');
+  }
+  async function attempt(url, ms=6000){
+    const ctrl = new AbortController();
+    const to = setTimeout(()=>ctrl.abort(), ms);
+    try{
+      const r = await fetch(url, {signal: ctrl.signal, mode:'cors'});
+      clearTimeout(to);
+      if(!r.ok) return null;
+      return await r.json();
+    }catch(e){ clearTimeout(to); return null; }
+  }
+  async function refreshLive(){
+    const api = 'https://livethreatmap.radware.com/api/map/attacks?limit=80';
+    let raw = null;
+    if(ATK_LIVE_URL){
+      raw = await attempt(ATK_LIVE_URL + (ATK_LIVE_URL.indexOf('?')>-1?'&':'?') + 'limit=80');
+    }
+    if(!raw){
+      const prox = [
+        'https://api.allorigins.win/raw?url='+encodeURIComponent(api),
+        'https://corsproxy.io/?url='+encodeURIComponent(api),
+        'https://api.codetabs.com/v1/proxy?quest='+encodeURIComponent(api)
+      ];
+      for(const p of prox){ raw = await attempt(p); if(raw) break; }
+    }
+    if(!raw) return;                       // everything failed -> keep baked snapshot
+    const recs = radwareRecords(raw);
+    const agg = aggregateRecords(recs);
+    if(agg.arcs.length < 10) return;       // not enough usable data -> keep baked
+    applyLive(agg.pulses, agg.arcs);
+  }
+  refreshLive();
+  setInterval(refreshLive, 45000);
 
   let t=0;
   let running = true;
