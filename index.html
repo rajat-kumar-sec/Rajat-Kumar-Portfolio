@@ -184,6 +184,55 @@
   }
   .viz .crosshair{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:220px;height:220px;pointer-events:none;opacity:.35}
   .viz .crosshair svg{width:100%;height:100%}
+  .viz .atk-feed{
+    position:absolute;top:64px;right:20px;width:252px;max-height:calc(100% - 150px);
+    border:1px solid var(--line);border-radius:4px;background:rgba(4,7,10,.6);
+    backdrop-filter:blur(6px);pointer-events:none;z-index:3;overflow:hidden;
+    box-shadow:0 10px 30px -12px rgba(0,0,0,.8);
+  }
+  .viz .af-head{
+    display:flex;align-items:center;gap:7px;padding:7px 10px 6px;
+    font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.14em;
+    color:var(--green);border-bottom:1px solid var(--line);
+  }
+  .viz .af-title{letter-spacing:.14em}
+  .viz .af-head .af-total{
+    margin-left:auto;color:var(--cyan);letter-spacing:.05em;
+    border:1px solid rgba(34,211,238,.35);border-radius:2px;padding:0 4px;
+    background:rgba(34,211,238,.08);
+  }
+  .viz .af-live{width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 8px var(--green);animation:afBlink 1.2s ease-in-out infinite}
+  @keyframes afBlink{0%,100%{opacity:1}50%{opacity:.25}}
+  .viz .af-toggle{
+    pointer-events:auto;cursor:pointer;border:1px solid var(--line);border-radius:3px;
+    background:rgba(57,255,158,.08);color:var(--green);font-family:'JetBrains Mono',monospace;
+    font-size:11px;line-height:1;padding:3px 6px;letter-spacing:.05em;transition:background .2s;
+  }
+  .viz .af-toggle:hover{background:rgba(57,255,158,.22)}
+  .viz .atk-feed.min{width:auto;max-height:30px;overflow:hidden}
+  .viz .atk-feed.min ul{display:none}
+  .viz .atk-feed ul{list-style:none;margin:0;padding:4px 0;max-height:300px;overflow-y:auto}
+  .viz .atk-feed li{
+    display:grid;grid-template-columns:.5fr .75fr 1.2fr .6fr;align-items:center;gap:6px;
+    padding:5px 8px;border-bottom:1px solid rgba(57,255,158,.07);
+    font-family:'JetBrains Mono',monospace;
+  }
+  .viz .atk-feed li.active{background:rgba(57,255,158,.08);box-shadow:inset 2px 0 0 var(--green)}
+  .viz .af-type{
+    font-size:8px;letter-spacing:.08em;text-transform:uppercase;text-align:center;
+    padding:1px 0;border-radius:2px;border:1px solid rgba(57,255,158,.35);color:var(--green);
+    background:rgba(57,255,158,.08);white-space:nowrap;
+  }
+  .viz .af-type.t-web{color:var(--red);border-color:rgba(255,85,119,.45);background:rgba(255,85,119,.1)}
+  .viz .af-type.t-intr{color:var(--amber);border-color:rgba(245,197,24,.45);background:rgba(245,197,24,.1)}
+  .viz .af-type.t-ddos{color:#ff8a3d;border-color:rgba(255,138,61,.5);background:rgba(255,138,61,.12)}
+  .viz .af-codes{font-size:9px;color:var(--text);letter-spacing:.02em;white-space:nowrap}
+  .viz .af-dir{display:flex;flex-direction:column;min-width:0}
+  .viz .af-dst{font-size:9px;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .viz .af-dst em{font-style:normal;color:var(--text-mute);font-size:8px}
+  .viz .af-n{font-size:10px;color:var(--cyan);text-align:right;letter-spacing:.05em;white-space:nowrap}
+  .viz .af-n b{color:var(--green);font-weight:400}
+  @media (max-width:900px){ .viz .atk-feed{display:none} }
   .viz .globe-fallback{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:auto}
   .viz .globe-shell{
     position:relative;width:min(70%,430px);aspect-ratio:1;border-radius:50%;overflow:hidden;
@@ -519,14 +568,20 @@
       <line x1="0" y1="110" x2="30" y2="110"/><line x1="190" y1="110" x2="220" y2="110"/>
     </svg></div>
     <div class="hud tl">
-      <div>◉ THREAT_NET / simulated</div>
+      <div>◉ THREAT_NET / live mapping</div>
       <div class="row"><span>THREATS <b id="hud-threat">067</b></span><span>COUNTRIES <b id="hud-countries">06</b></span><span>RTT <b id="hud-lat">12ms</b></span></div>
     </div>
     <div class="hud br">
       <div>PACKETS <b id="hud-pkt">0</b></div>
       <div>ENC <b>AES-256</b></div>
     </div>
-    <div class="center-label">// threat topology — visual simulation</div>
+    <div class="atk-feed" id="atk-feed">
+      <div class="af-head"><span class="af-live"></span><span class="af-title">LIVE ATTACKS</span><span class="af-total" id="af-total">0</span>
+        <button class="af-toggle" id="af-toggle" title="Minimize / Maximize" aria-label="Toggle attack feed">—</button>
+      </div>
+      <ul id="atk-feed-list"></ul>
+    </div>
+    <div class="center-label">// real attack arcs · seeded from Radware threat map</div>
   </div>
 </section>
 
@@ -1054,6 +1109,253 @@ function buildFallbackGlobe(host){
   }
 }
 
+/* ---------- Attack data snapshot (Radware public map, 2026-08-12) ---------- */
+const ATKD = {
+  coords:{  "ES":[40.46,-3.75],
+    "JP":[36.2,138.25],
+    "IQ":[33.22,43.68],
+    "FR":[46.23,2.21],
+    "HU":[47.16,19.5],
+    "SG":[1.35,103.82],
+    "ER":[15.18,39.78],
+    "PA":[8.54,-80.78],
+    "BA":[44.17,17.78],
+    "CL":[-35.68,-71.54],
+    "PS":[31.95,35.23],
+    "DK":[56.26,9.5],
+    "NP":[28.39,84.12],
+    "PH":[12.88,121.77],
+    "AL":[41.15,20.17],
+    "DO":[18.74,-70.16],
+    "BE":[50.5,4.47],
+    "NL":[52.13,5.29],
+    "NZ":[-40.9,174.89],
+    "GE":[42.32,43.36],
+    "PK":[30.38,69.35],
+    "SC":[-4.68,55.49],
+    "CO":[4.57,-74.3],
+    "VN":[14.06,108.28],
+    "HN":[15.2,-86.24],
+    "GR":[39.07,21.82],
+    "CA":[56.13,-106.35],
+    "ZA":[-30.56,22.94],
+    "IT":[41.87,12.57],
+    "CH":[46.82,8.23],
+    "RU":[61.52,105.32],
+    "TR":[38.96,35.24],
+    "KR":[35.91,127.77],
+    "EG":[26.82,30.8],
+    "SA":[23.89,45.08],
+    "HK":[22.32,114.17],
+    "NG":[9.08,8.68],
+    "QA":[25.35,51.18],
+    "UA":[48.38,31.17],
+    "BD":[23.68,90.36],
+    "LV":[56.88,24.6],
+    "VE":[6.42,-66.59],
+    "IE":[53.41,-8.24],
+    "IL":[31.05,34.85],
+    "AE":[23.4,53.8],
+    "RO":[45.94,24.97],
+    "LT":[55.17,23.88],
+    "FI":[61.92,25.75],
+    "LB":[33.85,35.86],
+    "PT":[39.4,-8.22],
+    "CI":[7.54,-5.55],
+    "KE":[-0.02,37.91],
+    "ME":[42.71,19.37],
+    "MX":[23.63,-102.55],
+    "NO":[60.47,8.47],
+    "AU":[-25.27,133.78],
+    "IR":[32.43,53.69],
+    "DE":[51.17,10.45],
+    "ID":[-0.79,113.92],
+    "CZ":[49.82,15.47],
+    "MA":[31.79,-7.09],
+    "MY":[4.21,101.98],
+    "CR":[9.75,-83.75],
+    "BO":[-16.29,-63.59],
+    "GB":[55.38,-3.44],
+    "AZ":[40.14,47.58],
+    "AR":[-38.42,-63.62],
+    "TH":[15.87,100.99],
+    "US":[39.83,-98.58],
+    "CN":[35.86,104.2],
+    "EC":[-1.83,-78.18],
+    "IN":[20.59,78.96],
+    "KH":[12.57,104.99],
+    "BR":[-14.24,-51.93],
+    "TW":[23.7,120.96],
+    "BG":[42.73,25.49],
+    "SE":[60.13,18.64],
+    "AT":[47.52,14.55]
+  },
+  pulses:{    "US":10393,
+    "DE":928,
+    "MX":905,
+    "NL":716,
+    "TW":143,
+    "BE":132,
+    "IN":64,
+    "SG":41,
+    "FR":35,
+    "IT":35,
+    "SE":26,
+    "GB":24,
+    "JP":17,
+    "EC":14,
+    "CA":12,
+    "TR":8,
+    "RU":8,
+    "BR":7,
+    "ID":6,
+    "AT":6,
+    "IL":6,
+    "HK":4,
+    "BG":4,
+    "IR":3,
+    "RO":3,
+    "CZ":2,
+    "ZA":2,
+    "AU":2,
+    "MY":2,
+    "KH":2,
+    "AR":2,
+    "CN":2,
+    "ES":2,
+    "HN":2,
+    "VN":2,
+    "HU":2,
+    "PA":2,
+    "CH":2,
+    "ME":2,
+    "AE":2,
+    "CL":2,
+    "BO":1
+  },
+  arcs:[    ["NL","FR",4319],
+    ["US","US",675],
+    ["US","IN",279],
+    ["US","BR",267],
+    ["US","CA",226],
+    ["US","JP",219],
+    ["US","AU",215],
+    ["US","IT",212],
+    ["CN","IT",192],
+    ["US","SE",183],
+    ["US","DE",172],
+    ["US","SG",168],
+    ["US","KR",161],
+    ["US","IL",157],
+    ["US","CH",149],
+    ["US","FR",146],
+    ["SG","IT",142],
+    ["CA","US",136],
+    ["FR","US",128],
+    ["US","ZA",118],
+    ["US","ES",115],
+    ["US","IE",115],
+    ["US","HK",114],
+    ["GB","US",113],
+    ["US","GB",108],
+    ["US","ID",106],
+    ["US","AE",65],
+    ["FR","AU",59],
+    ["NL","US",58],
+    ["SG","IN",56],
+    ["CA","SG",55],
+    ["FR","CA",54],
+    ["SG","JP",54],
+    ["GB","AU",49],
+    ["SG","IL",48],
+    ["US","NZ",47],
+    ["GB","ES",46],
+    ["GB","JP",44],
+    ["BG","US",42],
+    ["BG","HK",42],
+    ["SG","SG",39],
+    ["RO","HK",39],
+    ["GB","CA",39],
+    ["GB","DE",39],
+    ["GB","BR",39],
+    ["GB","GB",39],
+    ["SG","KR",38],
+    ["CA","IN",37],
+    ["CA","CA",37],
+    ["FR","SE",37],
+    ["CA","AU",36],
+    ["CN","IN",36],
+    ["GB","IL",35],
+    ["GB","IN",35],
+    ["FR","ZA",35],
+    ["GB","SG",34],
+    ["NL","SG",34],
+    ["CA","JP",34],
+    ["FR","GB",33],
+    ["HK","IT",33],
+    ["BG","FR",33],
+    ["CN","HK",32],
+    ["CN","JP",32],
+    ["SG","ID",32],
+    ["NL","AU",32],
+    ["NL","JP",32],
+    ["SG","US",31],
+    ["GB","FR",31],
+    ["GB","SE",31],
+    ["FR","IT",31],
+    ["GB","NZ",30],
+    ["GB","IT",30],
+    ["SG","HK",30],
+    ["NL","HK",30],
+    ["FR","BR",30],
+    ["CA","KR",29],
+    ["CN","US",29],
+    ["GB","ID",29],
+    ["FR","CH",27],
+    ["ID","ID",27],
+    ["IN","IN",27],
+    ["FR","ES",27],
+    ["GB","KR",26],
+    ["GB","CH",26],
+    ["BG","KR",26],
+    ["NL","IN",25],
+    ["FR","IE",24],
+    ["FR","FR",24],
+    ["CA","SE",24],
+    ["CN","ES",23],
+    ["GB","IE",23],
+    ["DE","JP",23],
+    ["CA","CH",23],
+    ["CN","CH",23],
+    ["CN","AU",22],
+    ["DE","IT",22],
+    ["GB","HK",22],
+    ["CA","DE",22],
+    ["CN","CA",22],
+    ["FR","DE",21],
+    ["FR","NZ",21],
+    ["FR","JP",20],
+    ["BR","IN",20],
+    ["BG","SE",19],
+    ["NL","KR",19],
+    ["US","MX",19],
+    ["GB","ZA",18],
+    ["JP","IT",18],
+    ["HK","HK",18],
+    ["CN","ZA",18],
+    ["CN","ID",18],
+    ["BR","BR",18],
+    ["CA","ES",17],
+    ["BG","JP",17],
+    ["BR","US",17],
+    ["CA","NZ",17],
+    ["CN","IE",16],
+    ["FR","SG",16],
+    ["HK","US",16],
+    ["CA","BR",15]
+  ]
+};
+
 /* ---------- Hero 3D scene ---------- */
 (function(){
   const host = document.getElementById('hero3d');
@@ -1112,6 +1414,299 @@ function buildFallbackGlobe(host){
   const inner = new THREE.Mesh(new THREE.SphereGeometry(1.66, 40, 40), innerMat);
   earthGroup.add(inner);
 
+  /* ---------- Live threat overlay (static snapshot of Radware public map) ---------- */
+  const ATK_R = 1.705;            // dot radius just above the surface
+  const ATK_ARC_H = 0.32;         // arc bulge height
+  const ATK_COORDS = ATKD.coords;
+  const ATK_PULSES = ATKD.pulses;
+  const ATK_ARCS = ATKD.arcs;
+
+  const ATK_NAMES = {
+    AE:'UAE', AL:'Albania', AR:'Argentina', AT:'Austria', AU:'Australia', AZ:'Azerbaijan',
+    BA:'Bosnia', BD:'Bangladesh', BE:'Belgium', BG:'Bulgaria', BO:'Bolivia', BR:'Brazil',
+    CA:'Canada', CH:'Switzerland', CI:'Ivory Coast', CL:'Chile', CN:'China', CO:'Colombia',
+    CR:'Costa Rica', CZ:'Czechia', DE:'Germany', DK:'Denmark', DO:'Dominican Rep.', EC:'Ecuador',
+    EG:'Egypt', ER:'Eritrea', ES:'Spain', FI:'Finland', FR:'France', GB:'UK', GE:'Georgia',
+    GR:'Greece', HK:'Hong Kong', HN:'Honduras', HU:'Hungary', ID:'Indonesia', IE:'Ireland',
+    IL:'Israel', IN:'India', IQ:'Iraq', IR:'Iran', IT:'Italy', JP:'Japan', KE:'Kenya',
+    KH:'Cambodia', KR:'South Korea', LB:'Lebanon', LT:'Lithuania', LV:'Latvia', MA:'Morocco',
+    ME:'Montenegro', MX:'Mexico', MY:'Malaysia', NG:'Nigeria', NL:'Netherlands', NO:'Norway',
+    NP:'Nepal', NZ:'New Zealand', PA:'Panama', PH:'Philippines', PK:'Pakistan', PS:'Palestine',
+    PT:'Portugal', QA:'Qatar', RO:'Romania', RU:'Russia', SA:'Saudi Arabia', SC:'Seychelles',
+    SE:'Sweden', SG:'Singapore', TH:'Thailand', TR:'Turkey', TW:'Taiwan', UA:'Ukraine',
+    US:'USA', VE:'Venezuela', VN:'Vietnam', ZA:'South Africa'
+  };
+
+  function ll2v(lat, lon, r){
+    const phi = (90 - lat) * Math.PI / 180;
+    const theta = (lon + 180) * Math.PI / 180;
+    return new THREE.Vector3(
+      -r * Math.sin(phi) * Math.cos(theta),
+      r * Math.cos(phi),
+      r * Math.sin(phi) * Math.sin(theta)
+    );
+  }
+  function posOf(code, r){
+    const c = ATK_COORDS[code];
+    return c ? ll2v(c[0], c[1], r) : null;
+  }
+
+  // soft glow sprite used for dots and comet heads
+  function makeGlowMat(hex, sizeMul){
+    const cv = document.createElement('canvas');
+    cv.width = cv.height = 64;
+    const g = cv.getContext('2d');
+    const grad = g.createRadialGradient(32,32,0,32,32,32);
+    grad.addColorStop(0, 'rgba(255,255,255,1)');
+    grad.addColorStop(0.35, 'rgba(255,255,255,.55)');
+    grad.addColorStop(1, 'rgba(255,255,255,0)');
+    g.fillStyle = grad;
+    g.fillRect(0,0,64,64);
+    const tex = new THREE.CanvasTexture(cv);
+    return new THREE.SpriteMaterial({
+      map: tex, color: hex, transparent: true, opacity: 1,
+      depthWrite: false, blending: THREE.AdditiveBlending
+    });
+  }
+  const dotMat = makeGlowMat(0xff5577, 1);      // attack origin pulses (red)
+  const cometHeadMat = makeGlowMat(0x39ff9e, 1); // travelling attack head (green)
+
+  // ---- static attacker-origin pulses (webAttackers) ----
+  const maxPulse = Math.max.apply(null, Object.keys(ATK_PULSES).map(k => ATK_PULSES[k]));
+  const pulseSprites = [];
+  Object.keys(ATK_PULSES).forEach(code => {
+    const p = posOf(code, ATK_R);
+    if(!p) return;
+    const s = new THREE.Sprite(dotMat);
+    const scale = 0.09 + 0.5 * (ATK_PULSES[code] / maxPulse);
+    s.scale.set(scale, scale, 1);
+    s.position.copy(p);
+    earthGroup.add(s);
+    pulseSprites.push({sprite: s, base: scale, phase: Math.random() * Math.PI * 2});
+  });
+
+  // ---- travelling attack arcs (scanners), pool of reusable comets ----
+  const COMETS = 26;
+  const cometPool = [];
+  const cometWeight = ATK_ARCS.reduce((s,a)=>s+a[2], 0);
+  function pickArc(){
+    let r = Math.random() * cometWeight;
+    for(const a of ATK_ARCS){
+      r -= a[2];
+      if(r <= 0) return a;
+    }
+    return ATK_ARCS[0];
+  }
+  function makeComet(){
+    const head = new THREE.Sprite(cometHeadMat);
+    head.scale.set(0.26, 0.26, 1);
+    head.visible = false;
+    earthGroup.add(head);
+    // explosion burst sprite on impact (Radware onHit flash)
+    const explMat = makeGlowMat(0xffd166, 1);
+    explMat.opacity = 0;
+    const expl = new THREE.Sprite(explMat);
+    expl.scale.setScalar(0.01);
+    expl.visible = false;
+    earthGroup.add(expl);
+    const geo = new THREE.BufferGeometry();
+    const segs = 20;
+    geo.setAttribute('position', new THREE.BufferAttribute(new Float32Array(segs * 3), 3));
+    const mat = new THREE.LineBasicMaterial({color:0x39ff9e, transparent:true, opacity:.5, depthWrite:false, blending:THREE.AdditiveBlending, side:THREE.DoubleSide});
+    const line = new THREE.Line(geo, mat);
+    line.frustumCulled = false;
+    line.visible = false;
+    earthGroup.add(line);
+    const segsArr = geo.attributes.position.array;
+    const seed = Math.random();
+    return {head, line, expl, mat, segs, segsArr, ad:null, bd:null, h:0, start:0, seed, explPending:0, arcKey:null};
+  }
+  for(let i=0;i<COMETS;i++) cometPool.push(makeComet());
+
+  /* ---- Radware-style arc: fp(start,end,height,t) = lerp + sine bulge ----
+     The line GROWS from the source country toward the target (advance),
+     the head sprite rides the tip with a wobbling size, and when the
+     attack reaches its target an explosion burst spawns. Same visual
+     language as livethreatmap.radware.com.                                   */
+  const ATK_DUR = 2000;              // ms per attack (was 3000 -> 1.5x faster)
+  const ATK_ARC_LIFT = 0.34;         // peak height above the surface
+  const ATK_JITTER = 4.5;            // degrees of random offset inside the country
+
+  // attack taxonomy shown in the live feed (weighted by real 2026-08 sample)
+  const ATK_TYPES = ['scanners','webAttackers','intruders','dDosAttackers'];
+  const ATK_TYPE_WEIGHT = [0.495, 0.49, 0.01, 0.005];
+  const ATK_TYPE_META = {
+    scanners:      {short:'SCAN', cls:'t-scan'},
+    webAttackers:  {short:'WEB',  cls:'t-web'},
+    intruders:     {short:'INTR', cls:'t-intr'},
+    dDosAttackers: {short:'DDoS', cls:'t-ddos'}
+  };
+  function pickType(){
+    let r = Math.random(), acc = 0;
+    for(let i=0;i<ATK_TYPES.length;i++){ acc += ATK_TYPE_WEIGHT[i]; if(r <= acc) return ATK_TYPES[i]; }
+    return 'scanners';
+  }
+
+  // great-circle slerp between two unit vectors by fraction t (0..1)
+  function slerpUnit(a, b, t){
+    const dot = THREE.MathUtils.clamp(a.dot(b), -1, 1);
+    const ang = Math.acos(dot);
+    if(ang < 1e-5) return a.clone();
+    const sinA = Math.sin((1 - t) * ang) / Math.sin(ang);
+    const sinB = Math.sin(t * ang) / Math.sin(ang);
+    return a.clone().multiplyScalar(sinA).add(b.clone().multiplyScalar(sinB));
+  }
+  // Radware fp(): position at fraction i along the arc, with sine lift
+  function arcPoint(g, i){
+    const dir = slerpUnit(g.ad, g.bd, Math.max(0, Math.min(1, i)));
+    const lift = g.h * Math.sin(Math.PI * i);   // fp: o*sin(PI*i)
+    return dir.multiplyScalar(ATK_R + lift);
+  }
+  // random point inside a country (centroid +/- jitter) -> normalized dir
+  function randDir(code){
+    const c = ATK_COORDS[code];
+    if(!c) return null;
+    const lat = c[0] + (Math.random() - .5) * ATK_JITTER;
+    const lon = c[1] + (Math.random() - .5) * ATK_JITTER;
+    const p = ll2v(lat, lon, 1);
+    return p.normalize();
+  }
+
+  // ---- live attack feed (right side panel) ----
+  const feedList = document.getElementById('atk-feed-list');
+  const feedTotal = document.getElementById('af-total');
+  const feedState = new Map();   // key => {total: n, flying: n}
+  let feedFrames = 0;
+
+  function feedKey(type, arc){ return type + '|' + arc[0] + '\u2192' + arc[1]; }
+  function spawnComet(c){
+    const arc = pickArc();
+    const ad = randDir(arc[0]);
+    const bd = randDir(arc[1]);
+    if(!ad || !bd) return false;
+    c.ad = ad; c.bd = bd;
+    c.type = pickType();
+    c.h = Math.max(Math.random(), .5) * ATK_ARC_LIFT;   // Radware: Math.max(rand,.5)*maxH
+    c.start = performance.now();
+    c.head.visible = true;
+    c.line.visible = true;
+    c.expl.visible = false;
+    c.expl.scale.setScalar(0.01);
+    c.explPending = 0;
+    c.arcKey = feedKey(c.type, arc);
+    feedState.set(c.arcKey, feedState.get(c.arcKey) || {total:0, flying:0});
+    feedState.get(c.arcKey).total++;
+    return true;
+  }
+
+  // pre-fill a nice spread of comets so the map is alive immediately
+  cometPool.forEach((c, i) => {
+    if(!spawnComet(c)) return;
+    c.start = performance.now() - (i / COMETS) * ATK_DUR;  // staggered start times
+  });
+
+  let arcTick = 0;
+  function updateAttacks(){
+    arcTick++;
+    const now = performance.now();
+
+    // reset flying counters once per cycle, then recompute from live comets
+    feedState.forEach(v => v.flying = 0);
+
+    cometPool.forEach(c => {
+      if(!c.ad) return;
+      const p = (now - c.start) / ATK_DUR;
+
+      if(p >= 1){
+        // attack landed -> explosion at target, then recycle
+        if(c.explPending === 0){
+          c.explPending = 1;
+          const tip = arcPoint(c, 1);
+          c.expl.position.copy(tip);
+          c.expl.visible = true;
+          c.expl.scale.setScalar(0.05);
+          c.head.visible = false;
+        }
+        // draw growing line at full length briefly, then respawn
+        if(c.explPending < 30){ c.explPending++; }
+        else { c.ad = null; c.line.visible = false; c.expl.visible = false; spawnComet(c); }
+        return;
+      }
+
+      if(c.arcKey) feedState.get(c.arcKey).flying++;
+
+      // Radware meshLine.advance(r): fill the polyline from source up to current tip
+      const arr = c.segsArr;
+      const k = Math.max(2, Math.ceil(c.segs * p));
+      for(let s=0; s<k; s++){
+        const tt = (s / (k - 1)) * p;
+        const pt = arcPoint(c, tt);
+        arr[s*3]   = pt.x;
+        arr[s*3+1] = pt.y;
+        arr[s*3+2] = pt.z;
+      }
+      // leave the remaining segment collapsed on the tip so the line still renders
+      for(let s=k; s<c.segs; s++){
+        const pt = arcPoint(c, p);
+        arr[s*3]   = pt.x;
+        arr[s*3+1] = pt.y;
+        arr[s*3+2] = pt.z;
+      }
+      c.line.geometry.attributes.position.needsUpdate = true;
+
+      // Radware point: head rides the tip, size wobbles (simplex-noise ~ sin)
+      const tip = arcPoint(c, p);
+      c.head.position.copy(tip);
+      const wob = 1 + 0.35 * Math.sin(now * 0.018 + c.seed * 6.283);
+      const hs = 0.22 * (c.h / ATK_ARC_LIFT) * wob;
+      c.head.scale.set(hs, hs, 1);
+    });
+
+    // explosion bursts expand + fade after impact (Radware onHit flash)
+    cometPool.forEach(c => {
+      if(c.explPending > 0 && c.explPending < 30){
+        const age = c.explPending;
+        const s = 0.05 + age * 0.05;
+        c.expl.scale.set(s, s, 1);
+        c.expl.material.opacity = Math.max(0, 1 - age / 22);
+      }
+      if(c.explPending >= 30){ c.expl.visible = false; c.expl.material.opacity = 0; }
+    });
+
+    // pulse breathing for attacker origins
+    pulseSprites.forEach(ps => {
+      const s = ps.base * (1 + 0.35 * Math.sin(arcTick * 0.12 + ps.phase));
+      ps.sprite.scale.set(s, s, 1);
+    });
+
+    // live feed DOM refresh (~every 8 frames)
+    if(feedList && feedFrames % 8 === 0){
+      const entries = [];
+      let grandTotal = 0;
+      feedState.forEach((v, k) => {
+        if(!v.total) return;
+        grandTotal += v.total;
+        entries.push({key:k, total:v.total, flying:v.flying});
+      });
+      // live ones first, then most frequent
+      entries.sort((x,y) => (y.flying-x.flying) || (y.total-x.total));
+      feedList.innerHTML = entries.slice(0, 9).map(e => {
+        const pipe = e.key.indexOf('|');
+        const typ = e.key.slice(0, pipe);
+        const src = e.key.slice(pipe + 1, pipe + 3);
+        const dst = e.key.slice(pipe + 4);
+        const meta = ATK_TYPE_META[typ] || ATK_TYPE_META.scanners;
+        return '<li'+(e.flying>0?' class="active"':'')+'>' +
+          '<span class="af-type '+meta.cls+'">'+meta.short+'</span>' +
+          '<span class="af-codes">'+src+' \u2192 '+dst+'</span>' +
+          '<span class="af-dir"><span class="af-dst">'+(ATK_NAMES[src]||src)+'</span><span class="af-dst"><em>\u2192 </em>'+(ATK_NAMES[dst]||dst)+'</span></span>' +
+          '<span class="af-n"><b>'+e.total+'</b>'+(e.flying>0?' \u00b7'+e.flying:'')+'</span></li>';
+      }).join('') || '<li><span class="af-codes">\u2014</span><span class="af-dir"><span class="af-dst">waiting</span></span><span class="af-n">0</span></li>';
+      if(feedTotal) feedTotal.textContent = String(grandTotal);
+    }
+    feedFrames++;
+  }
+
   // Mouse parallax and manual globe drag
   let mx=0,my=0;
   let dragging = false;
@@ -1156,10 +1751,10 @@ function buildFallbackGlobe(host){
   const latEl = document.getElementById('hud-lat');
   const threatEl = document.getElementById('hud-threat');
   const countryEl = document.getElementById('hud-countries');
-  if(pktEl) pktEl.textContent = '40213';
+  if(pktEl) pktEl.textContent = String(ATKD.arcs.length).padStart(3,'0');
   if(latEl) latEl.textContent = '12ms';
-  if(threatEl) threatEl.textContent = '067';
-  if(countryEl) countryEl.textContent = '06';
+  if(threatEl) threatEl.textContent = String(ATK_ARCS.reduce((s,a)=>s+a[2],0)).padStart(3,'0');
+  if(countryEl) countryEl.textContent = String(Object.keys(ATK_COORDS).length).padStart(2,'0');
 
   let t=0;
   let running = true;
@@ -1173,6 +1768,7 @@ function buildFallbackGlobe(host){
     camera.position.x += (mx*1.2 - camera.position.x)*0.04;
     camera.position.y += (-my*1.2 - camera.position.y)*0.04;
     camera.lookAt(0,0,0);
+    updateAttacks();
     renderer.render(scene,camera);
     requestAnimationFrame(animate);
   }
@@ -1182,6 +1778,20 @@ function buildFallbackGlobe(host){
       entries.forEach(e=>{ running = e.isIntersecting; if(running) animate(); });
     }, {threshold:.05}).observe(host);
   }
+})();
+
+/* ---------- Attack feed minimize / maximize ---------- */
+(function(){
+  const panel = document.getElementById('atk-feed');
+  const btn = document.getElementById('af-toggle');
+  if(!panel || !btn) return;
+  const setState = (min) => {
+    panel.classList.toggle('min', min);
+    btn.textContent = min ? '\u25B3' : '\u2014';   // expand / collapse glyph
+    btn.title = min ? 'Expand' : 'Collapse';
+  };
+  btn.addEventListener('click', () => setState(!panel.classList.contains('min')));
+  setState(false);
 })();
 
 /* ---------- Radar chart ---------- */
