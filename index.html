@@ -4,6 +4,18 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>RAJAT KUMAR // SOC.OPERATOR</title>
+<meta name="description" content="Cybersecurity portfolio of Rajat Kumar focused on SOC, blue-team operations, and practical security projects." />
+<meta name="theme-color" content="#04070a" />
+<link rel="canonical" href="https://rajat-kumar-sec.github.io/Rajat-Kumar-Portfolio/" />
+<meta property="og:type" content="website" />
+<meta property="og:title" content="Rajat Kumar // SOC Operator Portfolio" />
+<meta property="og:description" content="Cybersecurity student portfolio with SOC/blue-team projects, credentials, and contact channels." />
+<meta property="og:url" content="https://rajat-kumar-sec.github.io/Rajat-Kumar-Portfolio/" />
+<meta property="og:image" content="https://rajat-kumar-sec.github.io/Rajat-Kumar-Portfolio/.thumbnail.jpg" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Rajat Kumar // SOC Operator Portfolio" />
+<meta name="twitter:description" content="Cybersecurity student portfolio with SOC/blue-team projects, credentials, and contact channels." />
+<meta name="twitter:image" content="https://rajat-kumar-sec.github.io/Rajat-Kumar-Portfolio/.thumbnail.jpg" />
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Space+Grotesk:wght@500;600&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
@@ -23,10 +35,11 @@
     --amber:#f5c518;
     --red:#ff5577;
     --text:#d7e6df;
-    --text-dim:#7d9088;
-    --text-mute:#4b5c55;
+    --text-dim:#9aaca5;
+    --text-mute:#5f726a;
   }
   *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
   html,body{margin:0;padding:0;background:var(--bg);color:var(--text);font-family:'Space Grotesk',system-ui,sans-serif;overflow-x:hidden}
   body{
     background:
@@ -56,6 +69,18 @@
   }
   .vignette{position:fixed;inset:0;pointer-events:none;z-index:2;box-shadow:inset 0 0 240px 40px rgba(0,0,0,.7)}
 
+  .skip-link{
+    position:fixed;left:12px;top:10px;z-index:50;padding:10px 12px;
+    border:1px solid var(--green);background:#04110c;color:var(--green);
+    font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;
+    text-decoration:none;transform:translateY(-150%);transition:transform .2s ease;
+  }
+  .skip-link:focus-visible{transform:translateY(0)}
+  .sr-only{
+    position:absolute!important;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;
+    clip:rect(0,0,0,0);white-space:nowrap;border:0;
+  }
+
   /* NAV */
   nav.top{
     position:fixed;top:0;left:0;right:0;z-index:20;
@@ -78,6 +103,11 @@
   nav.top .links a:hover::before,nav.top .links a:hover::after{opacity:1}
   nav.top .meta{display:flex;gap:18px;color:var(--text-dim);align-items:center}
   nav.top .meta span b{color:var(--green);font-weight:500}
+  .menu-toggle{
+    display:none;align-items:center;gap:8px;border:1px solid var(--line);background:rgba(57,255,158,.08);
+    color:var(--green);font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;
+    padding:8px 10px;border-radius:3px;cursor:pointer;
+  }
   /* Hero */
   section.hero{
     position:relative;min-height:100vh;padding:120px 48px 60px;
@@ -141,6 +171,14 @@
   .btn.ghost:hover{color:var(--cyan);border-color:var(--cyan);box-shadow:0 0 24px -6px var(--cyan)}
   .btn::before{content:">";color:var(--green)}
   .btn.ghost::before{color:var(--cyan)}
+  .availability{
+    display:inline-flex;align-items:center;gap:8px;margin-bottom:10px;padding:4px 10px;border-radius:999px;
+    border:1px solid var(--line-strong);color:var(--green);background:rgba(57,255,158,.08);
+    font-size:10px;letter-spacing:.12em;text-transform:uppercase;
+  }
+  .availability i{
+    width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 10px var(--green);
+  }
 
   .hero-stats{
     display:grid;grid-template-columns:repeat(3,1fr);gap:0;
@@ -380,6 +418,9 @@
   .proj-tech .t{font-family:'JetBrains Mono',monospace;font-size:10px;padding:3px 8px;border:1px solid var(--line);color:var(--text-dim);border-radius:2px}
   .proj-tech .t.repo{color:var(--green);border-color:var(--line-strong);text-decoration:none;background:rgba(57,255,158,.06)}
   .proj-tech .t.repo:hover{color:#04070a;background:var(--green);box-shadow:0 0 14px -4px var(--green)}
+  .proj-actions{margin-top:12px;display:flex;gap:10px;flex-wrap:wrap}
+  .proj-actions a{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--cyan);text-decoration:none}
+  .proj-actions a:hover{color:var(--green)}
   .proj-viz{
     height:120px;margin:-4px -22px 16px;position:relative;overflow:hidden;
     border-bottom:1px solid var(--line);background:
@@ -443,8 +484,8 @@
   .contact-panel::after{bottom:-90px;left:-90px;border-color:var(--cyan)}
   .contact-grid{display:grid;grid-template-columns:1.1fr 1fr;gap:40px;position:relative;z-index:2}
   .contact-panel .prompt{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--green);letter-spacing:.16em;margin-bottom:14px}
-  .contact-panel h2{font-family:'Space Grotesk',sans-serif;font-size:clamp(38px,4.5vw,58px);font-weight:500;letter-spacing:-.02em;color:#eef7f1;line-height:1;margin:0 0 18px}
-  .contact-panel h2 em{font-style:normal;color:var(--green);text-shadow:0 0 30px rgba(57,255,158,.5)}
+  .contact-panel h2,.contact-panel h3{font-family:'Space Grotesk',sans-serif;font-size:clamp(38px,4.5vw,58px);font-weight:500;letter-spacing:-.02em;color:#eef7f1;line-height:1;margin:0 0 18px}
+  .contact-panel h2 em,.contact-panel h3 em{font-style:normal;color:var(--green);text-shadow:0 0 30px rgba(57,255,158,.5)}
   .contact-panel .lead{font-family:'Space Grotesk';color:var(--text-dim);font-size:16px;line-height:1.65;margin:0 0 26px;max-width:520px}
   .contact-cta{display:flex;flex-wrap:wrap;gap:12px}
   .contact-cta .btn{font-size:13px;padding:14px 22px}
@@ -466,6 +507,8 @@
   }
   footer b{color:var(--green);font-weight:500}
   footer .hash{color:var(--cyan)}
+  footer a{color:var(--cyan);text-decoration:none}
+  footer a:hover{color:var(--green)}
 
   /* Reveal */
   .reveal{opacity:0;transform:translateY(24px);transition:opacity .8s ease, transform .8s cubic-bezier(.2,.7,.2,1)}
@@ -487,26 +530,52 @@
   @media (max-width:640px){
     section{padding:70px 22px}
     nav.top{padding:12px 18px}
-    nav.top .links{display:none}
+    nav.top .links{
+      display:none;position:absolute;left:12px;right:12px;top:58px;flex-direction:column;gap:8px;
+      padding:12px;background:rgba(4,7,10,.96);border:1px solid var(--line);border-radius:4px;
+    }
+    nav.top .links.open{display:flex}
+    nav.top .links a{padding:6px 8px}
+    nav.top .meta{display:none}
+    .menu-toggle{display:inline-flex}
     section.hero{padding:100px 22px 40px}
     .skills-grid{grid-template-columns:1fr}
     .arsenal-grid{grid-template-columns:1fr}
     .proj-grid{grid-template-columns:1fr}
     .proj,.proj.wide,.proj.narrow{grid-column:span 1}
     .hero-stats{grid-template-columns:1fr 1fr}
+    .contact-panel{padding:34px 24px}
+    .contact-panel h2,.contact-panel h3{font-size:clamp(28px,9vw,40px)}
+    .center-label{display:none}
+    .contact-info .ci{grid-template-columns:1fr}
+    .terminal-body{padding:22px 20px 24px}
+    .terminal-body h1{font-size:clamp(34px,12vw,48px);line-height:1}
+    .hero-cta .btn{flex:1 1 100%;justify-content:center}
+    .hero-stats .s{padding:8px 10px;border-left:none;border-top:1px solid var(--line)}
+    .hero-stats .s:first-child{border-top:none}
+  }
+  :focus-visible{
+    outline:2px solid var(--cyan);
+    outline-offset:2px;
+  }
+  @media (prefers-reduced-motion: reduce){
+    *,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}
+    .reveal{opacity:1;transform:none}
   }
 </style>
 </head>
 <body>
 
-<div class="grid-bg"></div>
-<div class="scanlines"></div>
-<div class="noise"></div>
-<div class="vignette"></div>
+<a class="skip-link" href="#main-content">Skip to main content</a>
+<div class="grid-bg" aria-hidden="true"></div>
+<div class="scanlines" aria-hidden="true"></div>
+<div class="noise" aria-hidden="true"></div>
+<div class="vignette" aria-hidden="true"></div>
 
-<nav class="top">
+<nav class="top" aria-label="Primary">
   <div class="brand"><span class="dot"></span><span>RK_SYS // v2026.08</span></div>
-  <div class="links">
+  <button class="menu-toggle" id="menu-toggle" type="button" aria-expanded="false" aria-controls="primary-nav-links" aria-label="Toggle navigation menu">Menu</button>
+  <div class="links" id="primary-nav-links">
     <a href="#about">01_About</a>
     <a href="#skills">02_Skills</a>
     <a href="#arsenal">03_Tools</a>
@@ -520,8 +589,9 @@
   </div>
 </nav>
 
+<main id="main-content">
 <!-- HERO -->
-<section class="hero" id="top" data-screen-label="00 Hero">
+<section class="hero" id="top" data-screen-label="00 Hero" aria-labelledby="hero-heading">
   <div class="terminal reveal">
     <div class="terminal-header">
       <div class="traffic"><i></i><i></i><i></i></div>
@@ -531,21 +601,23 @@
     <div class="terminal-body">
       <div><span class="prompt">$</span> whoami --verbose</div>
       <div class="cmt">// resolving identity…</div>
-      <h1>RAJAT <span class="accent">KUMAR</span></h1>
+      <h1 id="hero-heading">RAJAT <span class="accent">KUMAR</span></h1>
+      <div class="availability"><i aria-hidden="true"></i>Open to work · internships &amp; entry-level SOC roles</div>
       <div class="role">
         <span>Cybersecurity Student</span><span class="sep">/</span>
         <span>SOC &amp; Blue Team</span><span class="sep">/</span>
         <span>AI Security</span>
       </div>
+      <div><span class="k">value</span>    <span class="cmt">=</span> <span class="str">"blue-team-ready analyst who ships practical security tools"</span></div>
       <div><span class="k">location</span> <span class="cmt">=</span> <span class="str">"India"</span></div>
       <div><span class="k">focus</span>    <span class="cmt">=</span> <span class="str">"blue-team &amp; SOC log analysis"</span></div>
       <div><span class="k">seeking</span>  <span class="cmt">=</span> <span class="str">"entry-level SOC / cybersecurity analyst"</span></div>
       <div><span class="prompt">$</span> <span id="typewriter"></span><span class="cursor"></span></div>
 
       <div class="hero-cta">
-        <a class="btn" href="#projects">View Projects</a>
-        <a class="btn ghost" href="mailto:rajatkumargdsss@gmail.com">Contact_Me</a>
-        <a class="btn ghost" href="https://github.com/rajat-kumar-sec" target="_blank" rel="noopener">GitHub</a>
+        <a class="btn" href="mailto:rajatkumargdsss@gmail.com">Primary_CTA · Contact</a>
+        <a class="btn ghost" href="#projects">View Projects</a>
+        <a class="btn ghost" href="https://github.com/rajat-kumar-sec" target="_blank" rel="noopener noreferrer">GitHub <span class="sr-only">(opens in new tab)</span></a>
         <a class="btn ghost" href="Rajat_Kumar_Resume.pdf" download>Download_Resume</a>
         <a class="btn ghost" href="Rajat_Kumar_Cover_Letter.pdf" download>Download_Cover_Letter</a>
       </div>
@@ -558,10 +630,10 @@
     </div>
   </div>
 
-  <div class="viz reveal">
+  <div class="viz reveal" role="region" aria-label="Threat globe visualization and attack feed">
     <span class="corner tl"></span><span class="corner tr"></span>
     <span class="corner bl"></span><span class="corner br"></span>
-    <div id="hero3d"></div>
+    <div id="hero3d"><noscript><p class="sr-only">Threat globe visualization requires JavaScript. Portfolio content is still fully available below.</p></noscript></div>
     <div class="crosshair"><svg viewBox="0 0 220 220" fill="none" stroke="#39ff9e" stroke-width="1">
       <circle cx="110" cy="110" r="106" stroke-dasharray="2 4"/>
       <circle cx="110" cy="110" r="70" stroke-dasharray="1 6" opacity=".6"/>
@@ -569,7 +641,7 @@
       <line x1="0" y1="110" x2="30" y2="110"/><line x1="190" y1="110" x2="220" y2="110"/>
     </svg></div>
     <div class="hud tl">
-      <div>◉ THREAT_NET / live mapping</div>
+      <div>◉ THREAT_NET / best-effort mapping</div>
       <div class="row"><span>THREATS <b id="hud-threat">067</b></span><span>COUNTRIES <b id="hud-countries">06</b></span><span>RTT <b id="hud-lat">12ms</b></span></div>
     </div>
     <div class="hud br">
@@ -577,20 +649,20 @@
       <div>ENC <b>AES-256</b></div>
     </div>
     <div class="atk-feed" id="atk-feed">
-      <div class="af-head"><span class="af-live"></span><span class="af-title">LIVE ATTACKS</span><span class="af-total" id="af-total">0</span>
-        <button class="af-toggle" id="af-toggle" title="Minimize / Maximize" aria-label="Toggle attack feed">—</button>
+      <div class="af-head"><span class="af-live" aria-hidden="true"></span><span class="af-title">ATTACK FEED</span><span class="af-total" id="af-total">0</span>
+        <button class="af-toggle" id="af-toggle" title="Collapse attack feed" aria-label="Collapse attack feed" aria-controls="atk-feed-list" aria-expanded="true">—</button>
       </div>
-      <ul id="atk-feed-list"></ul>
+      <ul id="atk-feed-list" aria-live="polite"></ul>
     </div>
-    <div class="center-label">// real attack arcs · seeded from Radware threat map</div>
+    <div class="center-label">// seeded snapshot + best-effort live refresh from Radware feed</div>
   </div>
 </section>
 
 <!-- ABOUT -->
-<section id="about" data-screen-label="01 About">
+<section id="about" data-screen-label="01 About" aria-labelledby="about-heading">
   <div class="section-head reveal">
     <span class="idx">01 / MISSION</span>
-    <h2>Signal from the <em>blue team</em>.</h2>
+    <h2 id="about-heading">Signal from the <em>blue team</em>.</h2>
     <span class="status"><i></i>Briefing_Open</span>
   </div>
 
@@ -632,10 +704,10 @@
 </section>
 
 <!-- SKILLS -->
-<section id="skills" data-screen-label="02 Skills">
+<section id="skills" data-screen-label="02 Skills" aria-labelledby="skills-heading">
   <div class="section-head reveal">
     <span class="idx">02 / CAPABILITIES</span>
-    <h2>Stack, <em>tooled &amp; tested.</em></h2>
+    <h2 id="skills-heading">Stack, <em>tooled &amp; tested.</em></h2>
     <span class="status"><i></i>Modules_Loaded</span>
   </div>
 
@@ -687,17 +759,17 @@
 
     <div class="radar-panel reveal">
       <div class="label">Capability Radar</div>
-      <canvas id="radar" width="600" height="600"></canvas>
+      <canvas id="radar" width="600" height="600" role="img" aria-label="Radar chart with self-assessed security capability levels"></canvas>
       <div class="foot">// self-assessed proficiency across 6 domains</div>
     </div>
   </div>
 </section>
 
 <!-- ARSENAL -->
-<section id="arsenal" data-screen-label="03 Tools">
+<section id="arsenal" data-screen-label="03 Tools" aria-labelledby="arsenal-heading">
   <div class="section-head reveal">
     <span class="idx">03 / ARSENAL</span>
-    <h2>Toolkit, <em>armed &amp; ready.</em></h2>
+    <h2 id="arsenal-heading">Toolkit, <em>armed &amp; ready.</em></h2>
     <span class="status"><i></i>Modules_Loaded</span>
   </div>
 
@@ -736,10 +808,10 @@
 </section>
 
 <!-- PROJECTS -->
-<section id="projects" data-screen-label="04 Projects">
+<section id="projects" data-screen-label="04 Projects" aria-labelledby="projects-heading">
   <div class="section-head reveal">
     <span class="idx">04 / DEPLOYMENTS</span>
-    <h2>Case files, <em>fielded.</em></h2>
+    <h2 id="projects-heading">Case files, <em>fielded.</em></h2>
     <span class="status"><i></i>4_Repos_Live</span>
   </div>
 
@@ -769,8 +841,9 @@
           with offline heuristic scoring (typosquatting, raw-IP, shortener detection). Presented at <span class="hl">Technovate 2026</span>;
           built as the browser-extension version the judges recommended.</p>
         <div class="proj-tech">
-          <span class="t">Chrome Ext</span><span class="t">Safe Browsing API</span><span class="t">Heuristics</span><a class="t repo" href="https://github.com/rajat-kumar-sec/safeurl-extension" target="_blank" rel="noopener">github ↗</a>
+          <span class="t">Chrome Ext</span><span class="t">Safe Browsing API</span><span class="t">Heuristics</span><a class="t repo" href="https://github.com/rajat-kumar-sec/safeurl-extension" target="_blank" rel="noopener noreferrer" aria-label="Open SafeURL repository (opens in new tab)">View repo ↗</a>
         </div>
+        <div class="proj-actions"><a href="https://github.com/rajat-kumar-sec/safeurl-extension" target="_blank" rel="noopener noreferrer">Open project source <span class="sr-only">(opens in new tab)</span></a></div>
       </div>
     </article>
 
@@ -795,7 +868,8 @@
         <div class="sub">Applied cryptography · block cipher</div>
         <p>AES-256 encryption &amp; decryption for image files — a hands-on demonstration of applied
           cryptography concepts against real payloads.</p>
-        <div class="proj-tech"><span class="t">Python</span><span class="t">AES-256</span><span class="t">CBC</span><a class="t repo" href="https://github.com/rajat-kumar-sec/Image-Encryption" target="_blank" rel="noopener">github ↗</a></div>
+        <div class="proj-tech"><span class="t">Python</span><span class="t">AES-256</span><span class="t">CBC</span><a class="t repo" href="https://github.com/rajat-kumar-sec/Image-Encryption" target="_blank" rel="noopener noreferrer" aria-label="Open AES image encryption repository (opens in new tab)">View repo ↗</a></div>
+        <div class="proj-actions"><a href="https://github.com/rajat-kumar-sec/Image-Encryption" target="_blank" rel="noopener noreferrer">Open project source <span class="sr-only">(opens in new tab)</span></a></div>
       </div>
     </article>
 
@@ -821,7 +895,8 @@
         <div class="sub">Bit-level strength scoring</div>
         <p>Scores password strength using <span class="hl">Shannon entropy calculations</span> —
           exposing weak, structured passwords that pass naive length checks.</p>
-        <div class="proj-tech"><span class="t">Python</span><span class="t">Entropy</span><span class="t">Statistics</span><a class="t repo" href="https://github.com/rajat-kumar-sec/Advanced-password-analyzer" target="_blank" rel="noopener">github ↗</a></div>
+        <div class="proj-tech"><span class="t">Python</span><span class="t">Entropy</span><span class="t">Statistics</span><a class="t repo" href="https://github.com/rajat-kumar-sec/Advanced-password-analyzer" target="_blank" rel="noopener noreferrer" aria-label="Open password analyzer repository (opens in new tab)">View repo ↗</a></div>
+        <div class="proj-actions"><a href="https://github.com/rajat-kumar-sec/Advanced-password-analyzer" target="_blank" rel="noopener noreferrer">Open project source <span class="sr-only">(opens in new tab)</span></a></div>
       </div>
     </article>
 
@@ -846,7 +921,8 @@
         <div class="sub">Claude API · security education</div>
         <p>Chatbot built on the <span class="hl">Claude API</span> to answer cybersecurity questions —
           combining an interest in AI systems with hands-on security education.</p>
-        <div class="proj-tech"><span class="t">Claude API</span><span class="t">Python</span><span class="t">LLM</span><a class="t repo" href="https://github.com/rajat-kumar-sec/CyberGPT" target="_blank" rel="noopener">github ↗</a></div>
+        <div class="proj-tech"><span class="t">Claude API</span><span class="t">Python</span><span class="t">LLM</span><a class="t repo" href="https://github.com/rajat-kumar-sec/CyberGPT" target="_blank" rel="noopener noreferrer" aria-label="Open CyberGPT repository (opens in new tab)">View repo ↗</a></div>
+        <div class="proj-actions"><a href="https://github.com/rajat-kumar-sec/CyberGPT" target="_blank" rel="noopener noreferrer">Open project source <span class="sr-only">(opens in new tab)</span></a></div>
       </div>
     </article>
 
@@ -854,10 +930,10 @@
 </section>
 
 <!-- TIMELINE -->
-<section id="timeline" data-screen-label="05 Credentials">
+<section id="timeline" data-screen-label="05 Credentials" aria-labelledby="timeline-heading">
   <div class="section-head reveal">
     <span class="idx">05 / CREDENTIALS</span>
-    <h2>Training &amp; <em>proof of work.</em></h2>
+    <h2 id="timeline-heading">Training &amp; <em>proof of work.</em></h2>
     <span class="status"><i></i>Chain_Verified</span>
   </div>
 
@@ -973,10 +1049,10 @@
 </section>
 
 <!-- CONTACT -->
-<section id="contact" data-screen-label="06 Contact">
+<section id="contact" data-screen-label="06 Contact" aria-labelledby="contact-heading">
   <div class="section-head reveal">
     <span class="idx">06 / HANDSHAKE</span>
-    <h2>Open <em>a channel.</em></h2>
+    <h2 id="contact-heading">Open <em>a channel.</em></h2>
     <span class="status"><i></i>Awaiting_Signal</span>
   </div>
 
@@ -984,13 +1060,13 @@
     <div class="contact-grid">
       <div>
         <div class="prompt">$ ./initiate --secure</div>
-        <h2>Recruiting for a<br/>SOC or blue-team <em>role?</em></h2>
+        <h3>Recruiting for a<br/>SOC or blue-team <em>role?</em></h3>
         <p class="lead">Rajat is available for internships, entry-level SOC Analyst positions, and
           collaboration on AI-security research. Fast to respond, ready to start.</p>
         <div class="contact-cta">
           <a class="btn" href="mailto:rajatkumargdsss@gmail.com">Email_Rajat</a>
-          <a class="btn ghost" href="https://linkedin.com/in/rajatkumar-3649a0372" target="_blank" rel="noopener">LinkedIn</a>
-          <a class="btn ghost" href="https://github.com/rajat-kumar-sec" target="_blank" rel="noopener">GitHub</a>
+          <a class="btn ghost" href="https://linkedin.com/in/rajatkumar-3649a0372" target="_blank" rel="noopener noreferrer">LinkedIn <span class="sr-only">(opens in new tab)</span></a>
+          <a class="btn ghost" href="https://github.com/rajat-kumar-sec" target="_blank" rel="noopener noreferrer">GitHub <span class="sr-only">(opens in new tab)</span></a>
           <a class="btn" href="Rajat_Kumar_Resume.pdf" download>Download_Resume</a>
           <a class="btn ghost" href="Rajat_Kumar_Cover_Letter.pdf" download>Download_Cover_Letter</a>
         </div>
@@ -999,8 +1075,8 @@
       <div class="contact-info">
         <div class="ci"><span class="k">Email</span><span class="v"><a href="mailto:rajatkumargdsss@gmail.com">rajatkumargdsss@gmail.com</a></span></div>
         <div class="ci"><span class="k">Phone</span><span class="v"><a href="tel:+919650736528">+91 96507 36528</a></span></div>
-        <div class="ci"><span class="k">GitHub</span><span class="v"><a href="https://github.com/rajat-kumar-sec" target="_blank" rel="noopener">github.com/rajat-kumar-sec</a></span></div>
-        <div class="ci"><span class="k">LinkedIn</span><span class="v"><a href="https://linkedin.com/in/rajatkumar-3649a0372" target="_blank" rel="noopener">/in/rajatkumar-3649a0372</a></span></div>
+        <div class="ci"><span class="k">GitHub</span><span class="v"><a href="https://github.com/rajat-kumar-sec" target="_blank" rel="noopener noreferrer">github.com/rajat-kumar-sec</a></span></div>
+        <div class="ci"><span class="k">LinkedIn</span><span class="v"><a href="https://linkedin.com/in/rajatkumar-3649a0372" target="_blank" rel="noopener noreferrer">/in/rajatkumar-3649a0372</a></span></div>
         <div class="ci"><span class="k">Location</span><span class="v">India · Available remote / relocate</span></div>
         <div class="ci"><span class="k">Availability</span><span class="v" style="color:var(--green)">Open to internships &amp; entry-level roles</span></div>
       </div>
@@ -1009,14 +1085,16 @@
 </section>
 
 <footer>
-  <span><b>RAJAT KUMAR</b> <span class="hash">// SOC_OPERATOR</span> // Portfolio v2026.08</span>
-  <span>Built with HTML · Three.js · <span class="hash">/dev/null</span></span>
+  <span><b>RAJAT KUMAR</b> <span class="hash">// SOC_OPERATOR</span> // Portfolio v2026.10</span>
+  <span><a href="#top">Back to top</a> · <a href="mailto:rajatkumargdsss@gmail.com">Email direct</a></span>
 </footer>
+</main>
 
 <script>
 /* ---------- Live clock (IST) ---------- */
 (function(){
   const el = document.getElementById('clock');
+  if(!el) return;
   function tick(){
     const now = new Date();
     const utcMs = now.getTime() + (now.getTimezoneOffset() * 60000);
@@ -1031,6 +1109,7 @@
 /* ---------- Typewriter ---------- */
 (function(){
   const el = document.getElementById('typewriter');
+  if(!el || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
   const lines = [
     'grep -r "opportunity" /soc/entry-level',
     'nmap -sV blue-team.roles',
@@ -1360,9 +1439,15 @@ const ATKD = {
 /* ---------- Hero 3D scene ---------- */
 (function(){
   const host = document.getElementById('hero3d');
-  if(!host || !window.THREE) return;
+  if(!host) return;
+  if(!window.THREE){
+    buildFallbackGlobe(host);
+    return;
+  }
   const canvas = document.createElement('canvas');
   canvas.className = 'hero3d-render';
+  canvas.tabIndex = 0;
+  canvas.setAttribute('aria-label', 'Threat globe canvas. Drag or use arrow keys to rotate.');
   host.appendChild(canvas);
   const scene = new THREE.Scene();
   const camera = new THREE.PerspectiveCamera(45, 1, 0.1, 1000);
@@ -1402,11 +1487,17 @@ const ATKD = {
   scene.add(earthGroup);
 
   // Earth texture layer
-  const earthTexture = new THREE.TextureLoader().load('https://threejs.org/examples/textures/land_ocean_ice_cloud_2048.jpg');
-  earthTexture.colorSpace = THREE.SRGBColorSpace;
-  const earth = new THREE.Mesh(
-    new THREE.SphereGeometry(1.675, 40, 40),
-    new THREE.MeshBasicMaterial({map: earthTexture, transparent:true, opacity:0.96})
+  const earthMaterial = new THREE.MeshBasicMaterial({color:0x0f5a4f, transparent:true, opacity:0.96});
+  const earth = new THREE.Mesh(new THREE.SphereGeometry(1.675, 40, 40), earthMaterial);
+  new THREE.TextureLoader().load(
+    'https://threejs.org/examples/textures/land_ocean_ice_cloud_2048.jpg',
+    (texture) => {
+      texture.colorSpace = THREE.SRGBColorSpace;
+      earthMaterial.map = texture;
+      earthMaterial.needsUpdate = true;
+    },
+    undefined,
+    () => {}
   );
   earthGroup.add(earth);
 
@@ -1757,6 +1848,14 @@ const ATKD = {
   canvas.addEventListener('pointerup', endDrag);
   canvas.addEventListener('pointerleave', endDrag);
   canvas.addEventListener('pointercancel', endDrag);
+  canvas.addEventListener('keydown', (e) => {
+    if(e.key === 'ArrowLeft') dragYaw -= 0.08;
+    else if(e.key === 'ArrowRight') dragYaw += 0.08;
+    else if(e.key === 'ArrowUp') dragPitch = Math.max(-1.05, dragPitch - 0.06);
+    else if(e.key === 'ArrowDown') dragPitch = Math.min(1.05, dragPitch + 0.06);
+    else return;
+    e.preventDefault();
+  });
 
   // HUD counters
   const pktEl = document.getElementById('hud-pkt');
@@ -1883,6 +1982,8 @@ const ATKD = {
     panel.classList.toggle('min', min);
     btn.textContent = min ? '\u25B3' : '\u2014';   // expand / collapse glyph
     btn.title = min ? 'Expand' : 'Collapse';
+    btn.setAttribute('aria-label', min ? 'Expand attack feed' : 'Collapse attack feed');
+    btn.setAttribute('aria-expanded', String(!min));
   };
   btn.addEventListener('click', () => setState(!panel.classList.contains('min')));
   setState(false);
@@ -1900,6 +2001,7 @@ const ATKD = {
     c.width = w * dpr;
     c.height = h * dpr;
     const ctx = c.getContext('2d');
+    if(!ctx) return;
     // reset any transform and clear in device-pixel coordinates
     ctx.setTransform(1,0,0,1,0,0);
     ctx.clearRect(0,0,c.width,c.height);
@@ -1998,10 +2100,34 @@ const ATKD = {
 /* ---------- Reveal on scroll ---------- */
 (function(){
   const els = document.querySelectorAll('.reveal');
+  if(!els.length) return;
+  if(window.matchMedia('(prefers-reduced-motion: reduce)').matches){
+    els.forEach(el => el.classList.add('in'));
+    return;
+  }
+  if(!('IntersectionObserver' in window)){
+    els.forEach(el => el.classList.add('in'));
+    return;
+  }
   const io = new IntersectionObserver((entries)=>{
     entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } });
   }, {threshold:.12});
   els.forEach(el=>io.observe(el));
+})();
+
+/* ---------- Mobile navigation ---------- */
+(function(){
+  const toggle = document.getElementById('menu-toggle');
+  const links = document.getElementById('primary-nav-links');
+  if(!toggle || !links) return;
+  const setOpen = (open) => {
+    links.classList.toggle('open', open);
+    toggle.setAttribute('aria-expanded', String(open));
+  };
+  toggle.addEventListener('click', () => {
+    setOpen(!links.classList.contains('open'));
+  });
+  links.querySelectorAll('a').forEach(a => a.addEventListener('click', () => setOpen(false)));
 })();
 </script>
 </body>
