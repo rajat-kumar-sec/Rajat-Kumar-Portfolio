@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>RAJAT KUMAR // SOC.OPERATOR</title>
+<title>Rajat Kumar | Cybersecurity &amp; SOC Portfolio</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Space+Grotesk:wght@500;600&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
@@ -55,6 +55,14 @@
     background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)' opacity='0.7'/></svg>");
   }
   .vignette{position:fixed;inset:0;pointer-events:none;z-index:2;box-shadow:inset 0 0 240px 40px rgba(0,0,0,.7)}
+  .skip-link{
+    position:fixed;left:12px;top:12px;z-index:30;
+    transform:translateY(-140%);
+    background:var(--panel-solid);color:var(--green);
+    border:1px solid var(--line-strong);padding:8px 12px;
+    font-family:'JetBrains Mono',monospace;font-size:12px;text-decoration:none
+  }
+  .skip-link:focus-visible{transform:none}
 
   /* NAV */
   nav.top{
@@ -78,6 +86,10 @@
   nav.top .links a:hover::before,nav.top .links a:hover::after{opacity:1}
   nav.top .meta{display:flex;gap:18px;color:var(--text-dim);align-items:center}
   nav.top .meta span b{color:var(--green);font-weight:500}
+  a:focus-visible,button:focus-visible{
+    outline:2px solid var(--cyan);
+    outline-offset:2px;
+  }
   /* Hero */
   section.hero{
     position:relative;min-height:100vh;padding:120px 48px 60px;
@@ -128,6 +140,14 @@
   .terminal-body .role .sep{color:var(--text-mute)}
   .cursor{display:inline-block;width:9px;height:16px;background:var(--green);vertical-align:-2px;animation:blink 1s steps(2) infinite;box-shadow:0 0 10px var(--green)}
   @keyframes blink{50%{opacity:0}}
+  .hero-summary{margin:12px 0 0;color:var(--text);font-size:14px;line-height:1.7}
+  .seeking-status{
+    margin-top:14px;display:inline-flex;align-items:center;gap:8px;
+    font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.08em;
+    color:var(--green);border:1px solid var(--line-strong);padding:6px 10px;
+    border-radius:2px;background:rgba(57,255,158,.08);text-transform:uppercase
+  }
+  .seeking-status i{width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 10px var(--green)}
 
   .hero-cta{display:flex;gap:12px;margin-top:22px;flex-wrap:wrap}
   .btn{
@@ -279,6 +299,13 @@
     letter-spacing:.16em;text-transform:uppercase;display:flex;align-items:center;gap:8px;
   }
   .section-head .status i{width:6px;height:6px;background:var(--green);border-radius:50%;box-shadow:0 0 10px var(--green);display:inline-block}
+  .section-lead{
+    margin:12px 0 0;
+    max-width:780px;
+    color:var(--text-dim);
+    font-size:14px;
+    line-height:1.6;
+  }
 
   /* ABOUT */
   .about-grid{display:grid;grid-template-columns:1.4fr 1fr;gap:28px}
@@ -376,10 +403,24 @@
   .proj-body .sub{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--cyan);letter-spacing:.08em;margin-bottom:14px;text-transform:uppercase}
   .proj-body p{margin:0 0 16px;color:var(--text-dim);font-size:14px;line-height:1.65}
   .proj-body p .hl{color:var(--green)}
+  .proj-summary{margin:0 0 14px;padding:0;list-style:none;display:grid;gap:6px}
+  .proj-summary li{font-size:13px;color:var(--text-dim);line-height:1.55}
+  .proj-summary b{color:var(--text)}
   .proj-tech{display:flex;flex-wrap:wrap;gap:6px;margin-top:auto;padding-top:14px;border-top:1px dashed var(--line)}
   .proj-tech .t{font-family:'JetBrains Mono',monospace;font-size:10px;padding:3px 8px;border:1px solid var(--line);color:var(--text-dim);border-radius:2px}
   .proj-tech .t.repo{color:var(--green);border-color:var(--line-strong);text-decoration:none;background:rgba(57,255,158,.06)}
   .proj-tech .t.repo:hover{color:#04070a;background:var(--green);box-shadow:0 0 14px -4px var(--green)}
+  .proj-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+  .proj-actions a{
+    font-family:'JetBrains Mono',monospace;
+    font-size:11px;
+    text-decoration:none;
+    color:var(--cyan);
+    border:1px solid var(--line);
+    padding:6px 10px;
+    border-radius:2px;
+  }
+  .proj-actions a:hover{border-color:var(--cyan);color:#e7fbff;background:rgba(34,211,238,.1)}
   .proj-viz{
     height:120px;margin:-4px -22px 16px;position:relative;overflow:hidden;
     border-bottom:1px solid var(--line);background:
@@ -457,6 +498,13 @@
   .contact-info .ci .v{color:var(--text)}
   .contact-info .ci .v a{color:inherit;text-decoration:none;border-bottom:1px dotted var(--line-strong);transition:color .2s}
   .contact-info .ci .v a:hover{color:var(--green)}
+  .copy-btn{
+    margin-left:8px;border:1px solid var(--line);background:rgba(57,255,158,.06);
+    color:var(--green);font-family:'JetBrains Mono',monospace;font-size:10px;
+    padding:2px 7px;border-radius:2px;cursor:pointer
+  }
+  .copy-btn:hover{background:rgba(57,255,158,.14)}
+  .copy-feedback{display:inline-block;margin-left:6px;color:var(--cyan);font-size:10px;min-width:40px}
 
   /* FOOTER */
   footer{
@@ -487,7 +535,7 @@
   @media (max-width:640px){
     section{padding:70px 22px}
     nav.top{padding:12px 18px}
-    nav.top .links{display:none}
+    nav.top .links{display:flex;gap:12px;overflow:auto;white-space:nowrap;max-width:58vw}
     section.hero{padding:100px 22px 40px}
     .skills-grid{grid-template-columns:1fr}
     .arsenal-grid{grid-template-columns:1fr}
@@ -495,16 +543,23 @@
     .proj,.proj.wide,.proj.narrow{grid-column:span 1}
     .hero-stats{grid-template-columns:1fr 1fr}
   }
+  @media (prefers-reduced-motion: reduce){
+    *,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}
+    .reveal{opacity:1;transform:none}
+    .scanlines,.noise{display:none}
+  }
 </style>
 </head>
 <body>
+<a class="skip-link" href="#main-content">Skip to main content</a>
 
 <div class="grid-bg"></div>
 <div class="scanlines"></div>
 <div class="noise"></div>
 <div class="vignette"></div>
 
-<nav class="top">
+<header>
+<nav class="top" aria-label="Primary">
   <div class="brand"><span class="dot"></span><span>RK_SYS // v2026.08</span></div>
   <div class="links">
     <a href="#about">01_About</a>
@@ -519,7 +574,9 @@
     <span id="clock">--:--:-- IST</span>
   </div>
 </nav>
+</header>
 
+<main id="main-content" tabindex="-1">
 <!-- HERO -->
 <section class="hero" id="top" data-screen-label="00 Hero">
   <div class="terminal reveal">
@@ -532,22 +589,20 @@
       <div><span class="prompt">$</span> whoami --verbose</div>
       <div class="cmt">// resolving identity…</div>
       <h1>RAJAT <span class="accent">KUMAR</span></h1>
-      <div class="role">
-        <span>Cybersecurity Student</span><span class="sep">/</span>
-        <span>SOC &amp; Blue Team</span><span class="sep">/</span>
-        <span>AI Security</span>
-      </div>
+      <div class="role"><span>Cybersecurity Student</span><span class="sep">/</span><span>SOC &amp; Blue Team Analyst (Entry-Level)</span></div>
       <div><span class="k">location</span> <span class="cmt">=</span> <span class="str">"India"</span></div>
-      <div><span class="k">focus</span>    <span class="cmt">=</span> <span class="str">"blue-team &amp; SOC log analysis"</span></div>
-      <div><span class="k">seeking</span>  <span class="cmt">=</span> <span class="str">"entry-level SOC / cybersecurity analyst"</span></div>
+      <div><span class="k">focus</span>    <span class="cmt">=</span> <span class="str">"SOC log analysis, threat detection, incident triage"</span></div>
+      <div><span class="k">seeking</span>  <span class="cmt">=</span> <span class="str">"internships &amp; entry-level SOC / cybersecurity analyst roles"</span></div>
+      <p class="hero-summary">I build practical security tools in Python and JavaScript, and I am focused on SOC analyst, blue-team, and security operations career paths.</p>
+      <div class="seeking-status"><i></i>Currently seeking internship &amp; entry-level roles</div>
       <div><span class="prompt">$</span> <span id="typewriter"></span><span class="cursor"></span></div>
 
       <div class="hero-cta">
+        <a class="btn" href="Rajat_Kumar_Resume.pdf" download>Download Resume</a>
         <a class="btn" href="#projects">View Projects</a>
-        <a class="btn ghost" href="mailto:rajatkumargdsss@gmail.com">Contact_Me</a>
-        <a class="btn ghost" href="https://github.com/rajat-kumar-sec" target="_blank" rel="noopener">GitHub</a>
-        <a class="btn ghost" href="Rajat_Kumar_Resume.pdf" download>Download_Resume</a>
-        <a class="btn ghost" href="Rajat_Kumar_Cover_Letter.pdf" download>Download_Cover_Letter</a>
+        <a class="btn ghost" href="mailto:rajatkumargdsss@gmail.com">Contact</a>
+        <a class="btn ghost" href="https://github.com/rajat-kumar-sec" target="_blank" rel="noopener noreferrer">View GitHub</a>
+        <a class="btn ghost" href="Rajat_Kumar_Cover_Letter.pdf" download>Cover Letter</a>
       </div>
 
       <div class="hero-stats">
@@ -593,6 +648,7 @@
     <h2>Signal from the <em>blue team</em>.</h2>
     <span class="status"><i></i>Briefing_Open</span>
   </div>
+  <p class="section-lead reveal">Quick background: current role focus, practical experience, and what Rajat is targeting next.</p>
 
   <div class="about-grid">
     <div class="brief reveal">
@@ -638,6 +694,7 @@
     <h2>Stack, <em>tooled &amp; tested.</em></h2>
     <span class="status"><i></i>Modules_Loaded</span>
   </div>
+  <p class="section-lead reveal">Core skill areas used in SOC-style workflows and security project work.</p>
 
   <div class="skills-wrap">
     <div class="skills-grid">
@@ -700,6 +757,7 @@
     <h2>Toolkit, <em>armed &amp; ready.</em></h2>
     <span class="status"><i></i>Modules_Loaded</span>
   </div>
+  <p class="section-lead reveal">Hands-on tools grouped by how they are used during recon, analysis, and defense.</p>
 
   <div class="arsenal-grid">
     <div class="toolkit reveal">
@@ -742,6 +800,7 @@
     <h2>Case files, <em>fielded.</em></h2>
     <span class="status"><i></i>4_Repos_Live</span>
   </div>
+  <p class="section-lead reveal">Each project summarizes the problem, approach, and what you can review next.</p>
 
   <div class="proj-grid">
 
@@ -765,12 +824,15 @@
         <div class="code">PROJ_01 // Technovate 2026</div>
         <h3>SafeURL <span class="slash">//</span> Phishing URL Detector</h3>
         <div class="sub">Browser extension · Google Safe Browsing + heuristics</div>
-        <p>A phishing URL detection <span class="hl">browser extension</span> integrating the <span class="hl">Google Safe Browsing API</span>
-          with offline heuristic scoring (typosquatting, raw-IP, shortener detection). Presented at <span class="hl">Technovate 2026</span>;
-          built as the browser-extension version the judges recommended.</p>
+        <ul class="proj-summary">
+          <li><b>What it is:</b> A phishing URL detection <span class="hl">browser extension</span>.</li>
+          <li><b>Problem solved:</b> Flags suspicious links using <span class="hl">Google Safe Browsing API</span> plus offline heuristics (typosquatting, raw IP, shorteners).</li>
+          <li><b>Outcome / next step:</b> Presented at <span class="hl">Technovate 2026</span>; browser-extension format follows judge feedback.</li>
+        </ul>
         <div class="proj-tech">
-          <span class="t">Chrome Ext</span><span class="t">Safe Browsing API</span><span class="t">Heuristics</span><a class="t repo" href="https://github.com/rajat-kumar-sec/safeurl-extension" target="_blank" rel="noopener">github ↗</a>
+          <span class="t">Chrome Extension</span><span class="t">Google Safe Browsing API</span><span class="t">Heuristics</span><a class="t repo" href="https://github.com/rajat-kumar-sec/safeurl-extension" target="_blank" rel="noopener noreferrer">github ↗</a>
         </div>
+        <div class="proj-actions"><a href="https://github.com/rajat-kumar-sec/safeurl-extension" target="_blank" rel="noopener noreferrer">View Source</a></div>
       </div>
     </article>
 
@@ -793,9 +855,13 @@
         <div class="code">PROJ_02</div>
         <h3>AES-256 <span class="slash">//</span> Image Encryption</h3>
         <div class="sub">Applied cryptography · block cipher</div>
-        <p>AES-256 encryption &amp; decryption for image files — a hands-on demonstration of applied
-          cryptography concepts against real payloads.</p>
-        <div class="proj-tech"><span class="t">Python</span><span class="t">AES-256</span><span class="t">CBC</span><a class="t repo" href="https://github.com/rajat-kumar-sec/Image-Encryption" target="_blank" rel="noopener">github ↗</a></div>
+        <ul class="proj-summary">
+          <li><b>What it is:</b> A Python utility for AES-256 image encryption and decryption.</li>
+          <li><b>Problem solved:</b> Demonstrates how sensitive file payloads can be protected with block cipher workflows.</li>
+          <li><b>Outcome / next step:</b> Practical cryptography project available for code review and local testing.</li>
+        </ul>
+        <div class="proj-tech"><span class="t">Python</span><span class="t">AES-256</span><span class="t">CBC</span><a class="t repo" href="https://github.com/rajat-kumar-sec/Image-Encryption" target="_blank" rel="noopener noreferrer">github ↗</a></div>
+        <div class="proj-actions"><a href="https://github.com/rajat-kumar-sec/Image-Encryption" target="_blank" rel="noopener noreferrer">View Source</a></div>
       </div>
     </article>
 
@@ -819,9 +885,13 @@
         <div class="code">PROJ_03</div>
         <h3>Shannon Entropy <span class="slash">//</span> Password Analyzer</h3>
         <div class="sub">Bit-level strength scoring</div>
-        <p>Scores password strength using <span class="hl">Shannon entropy calculations</span> —
-          exposing weak, structured passwords that pass naive length checks.</p>
-        <div class="proj-tech"><span class="t">Python</span><span class="t">Entropy</span><span class="t">Statistics</span><a class="t repo" href="https://github.com/rajat-kumar-sec/Advanced-password-analyzer" target="_blank" rel="noopener">github ↗</a></div>
+        <ul class="proj-summary">
+          <li><b>What it is:</b> A password analyzer based on <span class="hl">Shannon entropy</span>.</li>
+          <li><b>Problem solved:</b> Identifies weak structured passwords that pass basic length-only checks.</li>
+          <li><b>Outcome / next step:</b> Demonstrates statistical password evaluation logic in a focused CLI tool.</li>
+        </ul>
+        <div class="proj-tech"><span class="t">Python</span><span class="t">Entropy</span><span class="t">Statistics</span><a class="t repo" href="https://github.com/rajat-kumar-sec/Advanced-password-analyzer" target="_blank" rel="noopener noreferrer">github ↗</a></div>
+        <div class="proj-actions"><a href="https://github.com/rajat-kumar-sec/Advanced-password-analyzer" target="_blank" rel="noopener noreferrer">View Source</a></div>
       </div>
     </article>
 
@@ -844,9 +914,13 @@
         <div class="code">PROJ_04</div>
         <h3>CyberGPT <span class="slash">//</span> AI Security Chatbot</h3>
         <div class="sub">Claude API · security education</div>
-        <p>Chatbot built on the <span class="hl">Claude API</span> to answer cybersecurity questions —
-          combining an interest in AI systems with hands-on security education.</p>
-        <div class="proj-tech"><span class="t">Claude API</span><span class="t">Python</span><span class="t">LLM</span><a class="t repo" href="https://github.com/rajat-kumar-sec/CyberGPT" target="_blank" rel="noopener">github ↗</a></div>
+        <ul class="proj-summary">
+          <li><b>What it is:</b> A chatbot using the <span class="hl">Claude API</span> for cybersecurity Q&amp;A.</li>
+          <li><b>Problem solved:</b> Provides fast security-learning support through AI-assisted responses.</li>
+          <li><b>Outcome / next step:</b> Shows Rajat's interest in practical AI-security tooling and education.</li>
+        </ul>
+        <div class="proj-tech"><span class="t">Claude API</span><span class="t">Python</span><span class="t">LLM</span><a class="t repo" href="https://github.com/rajat-kumar-sec/CyberGPT" target="_blank" rel="noopener noreferrer">github ↗</a></div>
+        <div class="proj-actions"><a href="https://github.com/rajat-kumar-sec/CyberGPT" target="_blank" rel="noopener noreferrer">View Source</a></div>
       </div>
     </article>
 
@@ -860,6 +934,7 @@
     <h2>Training &amp; <em>proof of work.</em></h2>
     <span class="status"><i></i>Chain_Verified</span>
   </div>
+  <p class="section-lead reveal">Certifications, practical training, and education milestones in chronological format.</p>
 
   <div class="certs-edu">
     <div>
@@ -979,6 +1054,7 @@
     <h2>Open <em>a channel.</em></h2>
     <span class="status"><i></i>Awaiting_Signal</span>
   </div>
+  <p class="section-lead reveal">Direct links for hiring conversations, resume download, and source review.</p>
 
   <div class="contact-panel reveal">
     <div class="contact-grid">
@@ -989,24 +1065,25 @@
           collaboration on AI-security research. Fast to respond, ready to start.</p>
         <div class="contact-cta">
           <a class="btn" href="mailto:rajatkumargdsss@gmail.com">Email_Rajat</a>
-          <a class="btn ghost" href="https://linkedin.com/in/rajatkumar-3649a0372" target="_blank" rel="noopener">LinkedIn</a>
-          <a class="btn ghost" href="https://github.com/rajat-kumar-sec" target="_blank" rel="noopener">GitHub</a>
+          <a class="btn ghost" href="https://linkedin.com/in/rajatkumar-3649a0372" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+          <a class="btn ghost" href="https://github.com/rajat-kumar-sec" target="_blank" rel="noopener noreferrer">GitHub</a>
           <a class="btn" href="Rajat_Kumar_Resume.pdf" download>Download_Resume</a>
           <a class="btn ghost" href="Rajat_Kumar_Cover_Letter.pdf" download>Download_Cover_Letter</a>
         </div>
       </div>
 
       <div class="contact-info">
-        <div class="ci"><span class="k">Email</span><span class="v"><a href="mailto:rajatkumargdsss@gmail.com">rajatkumargdsss@gmail.com</a></span></div>
+        <div class="ci"><span class="k">Email</span><span class="v"><a href="mailto:rajatkumargdsss@gmail.com">rajatkumargdsss@gmail.com</a><button type="button" class="copy-btn" id="copy-email">Copy</button><span class="copy-feedback" id="copy-feedback" aria-live="polite"></span></span></div>
         <div class="ci"><span class="k">Phone</span><span class="v"><a href="tel:+919650736528">+91 96507 36528</a></span></div>
-        <div class="ci"><span class="k">GitHub</span><span class="v"><a href="https://github.com/rajat-kumar-sec" target="_blank" rel="noopener">github.com/rajat-kumar-sec</a></span></div>
-        <div class="ci"><span class="k">LinkedIn</span><span class="v"><a href="https://linkedin.com/in/rajatkumar-3649a0372" target="_blank" rel="noopener">/in/rajatkumar-3649a0372</a></span></div>
+        <div class="ci"><span class="k">GitHub</span><span class="v"><a href="https://github.com/rajat-kumar-sec" target="_blank" rel="noopener noreferrer">github.com/rajat-kumar-sec</a></span></div>
+        <div class="ci"><span class="k">LinkedIn</span><span class="v"><a href="https://linkedin.com/in/rajatkumar-3649a0372" target="_blank" rel="noopener noreferrer">/in/rajatkumar-3649a0372</a></span></div>
         <div class="ci"><span class="k">Location</span><span class="v">India · Available remote / relocate</span></div>
         <div class="ci"><span class="k">Availability</span><span class="v" style="color:var(--green)">Open to internships &amp; entry-level roles</span></div>
       </div>
     </div>
   </div>
 </section>
+</main>
 
 <footer>
   <span><b>RAJAT KUMAR</b> <span class="hash">// SOC_OPERATOR</span> // Portfolio v2026.08</span>
@@ -1031,6 +1108,8 @@
 /* ---------- Typewriter ---------- */
 (function(){
   const el = document.getElementById('typewriter');
+  const reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if(reduced){ el.textContent = 'ready --for=soc-opportunities'; return; }
   const lines = [
     'grep -r "opportunity" /soc/entry-level',
     'nmap -sV blue-team.roles',
@@ -1360,7 +1439,8 @@ const ATKD = {
 /* ---------- Hero 3D scene ---------- */
 (function(){
   const host = document.getElementById('hero3d');
-  if(!host || !window.THREE) return;
+  if(!host) return;
+  if(!window.THREE){ buildFallbackGlobe(host); return; }
   const canvas = document.createElement('canvas');
   canvas.className = 'hero3d-render';
   host.appendChild(canvas);
@@ -1995,9 +2075,41 @@ const ATKD = {
   window.addEventListener('resize', ()=>{ requestAnimationFrame(draw); });
 })();
 
+/* ---------- Copy email ---------- */
+(function(){
+  const copyBtn = document.getElementById('copy-email');
+  const feedback = document.getElementById('copy-feedback');
+  const email = 'rajatkumargdsss@gmail.com';
+  if(!copyBtn || !feedback) return;
+  copyBtn.addEventListener('click', async () => {
+    let ok = false;
+    try{
+      if(navigator.clipboard && window.isSecureContext){
+        await navigator.clipboard.writeText(email);
+        ok = true;
+      }
+    } catch (e) {}
+    if(!ok){
+      const ta = document.createElement('textarea');
+      ta.value = email;
+      ta.setAttribute('readonly','');
+      ta.style.position = 'absolute';
+      ta.style.left = '-9999px';
+      document.body.appendChild(ta);
+      ta.select();
+      ok = document.execCommand('copy');
+      document.body.removeChild(ta);
+    }
+    feedback.textContent = ok ? 'Copied' : 'Copy failed';
+    setTimeout(()=>{ feedback.textContent = ''; }, 1800);
+  });
+})();
+
 /* ---------- Reveal on scroll ---------- */
 (function(){
   const els = document.querySelectorAll('.reveal');
+  const reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if(reduced){ els.forEach(el => el.classList.add('in')); return; }
   const io = new IntersectionObserver((entries)=>{
     entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } });
   }, {threshold:.12});
